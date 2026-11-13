@@ -1,15 +1,19 @@
 name: Publicar no GitHub Pages
+
 on:
   push:
-    branches: [main]
+    branches: ["main"]
   workflow_dispatch:
+
 permissions:
   contents: read
   pages: write
   id-token: write
+
 concurrency:
-  group: pages
+  group: "pages"
   cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -18,16 +22,15 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
       - uses: actions/configure-pages@v5
       - run: npm install
       - run: npm run build
         env:
-          # Se o repositório se chamar SEU-USUARIO.github.io, troque a linha abaixo por: NEXT_PUBLIC_BASE_PATH: ""
           NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: out
+
   deploy:
     needs: build
     runs-on: ubuntu-latest
